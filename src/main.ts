@@ -1,13 +1,11 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable sort-imports-es6-autofix/sort-imports-es6 */
 // Import external modules
-import { winstonLoggerOptions } from '@config/logger.config';
 import { createDocument } from '@core/docs/swagger';
 import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import * as cluster from 'cluster';
-import { WinstonModule } from 'nest-winston';
 import * as os from 'os';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
@@ -16,7 +14,7 @@ const logger = new Logger('bootstrap');
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
-    logger: WinstonModule.createLogger(winstonLoggerOptions),
+    // logger: WinstonModule.createLogger(winstonLoggerOptions),
   });
 
   app.enableCors();

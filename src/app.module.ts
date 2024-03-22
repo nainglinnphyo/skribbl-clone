@@ -17,7 +17,7 @@ import { TimeoutInterceptor } from './core/interceptors/timeout.interceptor';
 import { RouterModule } from './modules/router.module';
 import { ValidationExceptionFilter } from './core/filters/validation.exception-filter';
 import { TypeOrmModule } from './modules/database/database.module';
-import { SocketGateway } from './socket/socket.gateway';
+import { SocketGateway } from './modules/socket/socket.gateway';
 
 @Module({
   imports: [CommonModule, TypeOrmModule.forRoot(), RouterModule.forRoot()],

@@ -1,5 +1,7 @@
-import { Column, Entity } from 'typeorm';
+/* eslint-disable import/no-cycle */
+import { Column, Entity, ManyToMany } from 'typeorm';
 import { BaseEntity } from './base.entity';
+import { Room } from './room.entity';
 
 @Entity({ name: 'users' })
 export class User extends BaseEntity {
@@ -11,4 +13,7 @@ export class User extends BaseEntity {
 
   @Column({ type: 'varchar' })
   password: string;
+
+  @ManyToMany(() => Room, (room) => room.users)
+  rooms: Room[];
 }
