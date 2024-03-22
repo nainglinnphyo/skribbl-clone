@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 import { ApiProperty } from '@nestjs/swagger';
 
 export class RegisterDto {
@@ -12,9 +13,9 @@ export class RegisterDto {
 }
 
 export class LoginDto {
-  @ApiProperty()
+  @ApiProperty({ default: 'user@gmail.com' })
   email: string;
 
-  @ApiProperty()
+  @ApiProperty({ default: '123456' })
   password: string;
 }
