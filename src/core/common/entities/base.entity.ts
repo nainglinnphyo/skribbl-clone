@@ -1,18 +1,18 @@
-import { Column, ObjectId, ObjectIdColumn } from 'typeorm';
+import { Column, CreateDateColumn, ObjectId, ObjectIdColumn, UpdateDateColumn } from 'typeorm';
 
 export abstract class BaseEntity {
   @ObjectIdColumn()
-  id: ObjectId;
+  _id: ObjectId;
 
   @Column({ type: 'boolean', default: false })
-  delFlg: string;
+  delFlg: boolean;
 
   @Column({ type: 'varchar', length: 300, default: 'apo' })
   createdBy: string;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
-  @Column({ type: 'timestamp', default: null, nullable: true })
+  @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
 }
