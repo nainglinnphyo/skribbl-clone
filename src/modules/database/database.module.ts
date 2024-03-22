@@ -1,6 +1,5 @@
 // database-config.service.ts
 
-import { Room } from '@app/core/common/entities/room.entity';
 import { User } from '@app/core/common/entities/user.entity';
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';

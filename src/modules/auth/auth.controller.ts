@@ -3,11 +3,11 @@ import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { BadRequestException } from '@app/core/exceptions';
 import { ExceptionConstants } from '@app/core/exceptions/constants';
 import { IResponse } from '@app/core/interfaces/response.interface';
-import { CurrentUser, IAuthUser } from '@app/core/decorators/auth.decorators';
+import { CurrentUser } from '@app/core/decorators/auth.decorators';
+import { User } from '@app/core/common/entities/user.entity';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/auth.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { User } from '@app/core/common/entities/user.entity';
 
 @ApiTags('Auth')
 @Controller({
