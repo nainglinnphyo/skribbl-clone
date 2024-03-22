@@ -10,3 +10,11 @@ export class RegisterDto {
   @ApiProperty()
   password: string;
 }
+
+export class LoginDto {
+  @ApiProperty()
+  email: string;
+
+  @ApiProperty()
+  password: string;
+}

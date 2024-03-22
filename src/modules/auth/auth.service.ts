@@ -1,5 +1,5 @@
 import { User } from '@app/core/common/entities/user.entity';
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -43,5 +43,22 @@ export class AuthService {
     return this.jwtService.signAsync(payload, {
       secret: 'secret',
     });
+  }
+
+  async login(dto: { email: string; password: string }): Promise<IResponse> {
+    const data = await this.usersRepository.findOneOrFail({
+      where: {
+        email: dto.email,
+        password: dto.password,
+      },
+    });
+    const token = await this.generateToken({ userId: data._id.toString(), email: data.email });
+    return {
+      _data: { ...data, token },
+      _metadata: {
+        message: 'login success',
+        statusCode: HttpStatus.OK,
+      },
+    };
   }
 }

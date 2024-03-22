@@ -6,7 +6,7 @@ import { IResponse } from '@app/core/interfaces/response.interface';
 import { CurrentUser } from '@app/core/decorators/auth.decorators';
 import { User } from '@app/core/common/entities/user.entity';
 import { AuthService } from './auth.service';
-import { RegisterDto } from './dto/auth.dto';
+import { LoginDto, RegisterDto } from './dto/auth.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @ApiTags('Auth')
@@ -46,5 +46,12 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   async validateUser(@CurrentUser() user: User) {
     return user;
+  }
+
+  @Post('user/login')
+  @ApiBearerAuth()
+  @ApiBody({ type: LoginDto })
+  async login(@Body() dto: LoginDto) {
+    return this.authService.login(dto);
   }
 }
