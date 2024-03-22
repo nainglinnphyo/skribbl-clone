@@ -15,10 +15,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TimeoutInterceptor } from './core/interceptors/timeout.interceptor';
 import { RouterModule } from './modules/router.module';
-import { ValidationExceptionFilter } from './core/filters/validatin.exception-filter';
+import { ValidationExceptionFilter } from './core/filters/validation.exception-filter';
+import { TypeOrmModule } from './modules/database/database.module';
 
 @Module({
-  imports: [CommonModule, RouterModule.forRoot()],
+  imports: [CommonModule, TypeOrmModule.forRoot(), RouterModule.forRoot()],
   controllers: [AppController],
   providers: [
     AppService,
@@ -76,6 +77,7 @@ import { ValidationExceptionFilter } from './core/filters/validatin.exception-fi
     //   inject: [ConfigService],
     // },
   ],
+  // exports: [TypeOrmModule],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

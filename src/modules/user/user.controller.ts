@@ -1,4 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('user')
@@ -6,6 +7,8 @@ import { ApiTags } from '@nestjs/swagger';
   version: '1',
 })
 export class UserController {
+  constructor(private configService: ConfigService) {}
+
   @Get()
   getUser() {
     return 'get user endpoint';

@@ -4,14 +4,12 @@ import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 import * as Joi from 'joi';
 import configs from '@config/index';
-import { PrismaModule } from '@shared/prisma/prisma.module';
 
 const ENV = process.env.NODE_ENV || 'development';
 @Module({
   controllers: [],
   providers: [],
   imports: [
-    PrismaModule,
     ConfigModule.forRoot({
       load: configs,
       isGlobal: true,
@@ -27,6 +25,7 @@ const ENV = process.env.NODE_ENV || 'development';
         VERSION_PREFIX: Joi.string().required(),
         DEFAULT_VERSION: Joi.string().required(),
         TZ: Joi.string().required(),
+        DB_NAME: Joi.string().required(),
         // auth config
         AUTH_JWT_ACCESS_TOKEN_EXPIRED: Joi.string().default('15m').required(),
         AUTH_JWT_ACCESS_TOKEN_SECRET_KEY: Joi.string().alphanum().min(5).max(50).required(),
