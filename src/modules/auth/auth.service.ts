@@ -4,7 +4,7 @@ import { IResponse } from '@app/core/interfaces/response.interface';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import * as schema from '@app/modules/drizzle/schema';
 import { DRIZZLE_ORM } from '@app/core/constants/db.constants';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { takeUniqueOrNull } from '@app/shared/queries/query';
 
 @Injectable()
@@ -15,14 +15,13 @@ export class AuthService {
   ) {}
 
   async validateUser(userId: string): Promise<IResponse> {
+    const user = await this.conn.select().from(schema.users).where(eq(schema.users.id, userId)).then(takeUniqueOrNull);
     return {
       _metadata: {
         message: '',
         statusCode: 200,
       },
-      _data: {
-        user: this.conn.select().from(schema.users).where(eq(schema.users.id, userId)),
-      },
+      _data: { user },
     };
   }
 
@@ -38,11 +37,15 @@ export class AuthService {
     return user;
   }
 
+  async verifyPassword(dto: { email: string; password: string }) {
+    return this.conn.query.users.findFirst({
+      where: and(eq(schema.users.email, dto.email), eq(schema.users.password, dto.password)),
+    });
+  }
+
   generateToken(payload: { userId: string; email: string }) {
     return this.jwtService.signAsync(payload, {
       secret: 'secret',
     });
   }
-
-  // async login(dto: { email: string; password: string }): Promise<any> {}
 }

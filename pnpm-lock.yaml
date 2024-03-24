@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@knaadh/nestjs-drizzle-postgres':
+    specifier: ^1.0.0
+    version: 1.0.0(@nestjs/common@10.3.4)(drizzle-orm@0.30.4)(postgres@3.4.4)
   '@nestjs/common':
     specifier: ^10.2.0
     version: 10.3.4(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)(rxjs@7.8.1)
@@ -1577,6 +1580,19 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.4.15
+
+  /@knaadh/nestjs-drizzle-postgres@1.0.0(@nestjs/common@10.3.4)(drizzle-orm@0.30.4)(postgres@3.4.4):
+    resolution: {integrity: sha512-r3elSMh+M3ndJw1EJqYJWK0tqPo0zz+AURkLr/OoOws3wWKTyT0GQsKZTBpPytdZnbHqXPHh5ExsPNEc7eJ8Pw==}
+    peerDependencies:
+      '@nestjs/common': '>=9.0.0'
+      drizzle-orm: '>=0.28.6'
+      postgres: '>=3'
+    dependencies:
+      '@nestjs/common': 10.3.4(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.14)(rxjs@7.8.1)
+      drizzle-orm: 0.30.4(pg@8.11.3)(postgres@3.4.4)
+      postgres: 3.4.4
+      tslib: 2.6.2
+    dev: false
 
   /@ljharb/through@2.3.13:
     resolution: {integrity: sha512-/gKJun8NNiWGZJkGzI/Ragc53cOdcLNdzjLaIa+GEjguQs0ulsurx8WN0jijdK9yPqDvziX995sMRLyLt1uZMQ==}

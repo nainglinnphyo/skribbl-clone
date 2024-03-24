@@ -44,10 +44,31 @@ export class AuthController {
     return user;
   }
 
-  // @Post('user/login')
-  // @ApiBearerAuth()
-  // @ApiBody({ type: LoginDto })
-  // async login(@Body() dto: LoginDto) {
-  //   return this.authService.login(dto);
-  // }
+  @Post('user/login')
+  @ApiBearerAuth()
+  @ApiBody({ type: LoginDto })
+  async login(@Body() dto: LoginDto): Promise<IResponse> {
+    const existUser = await this.authService.checkUserExist(dto.email);
+    if (!existUser) {
+      throw new BadRequestException({
+        message: "user don't exist",
+        code: ExceptionConstants.UnauthorizedCodes.USER_NOT_VERIFIED,
+      });
+    }
+    const checkPass = await this.authService.verifyPassword(dto);
+    if (!checkPass) {
+      throw new BadRequestException({
+        message: "password don't match",
+        code: ExceptionConstants.UnauthorizedCodes.INVALID_RESET_PASSWORD_TOKEN,
+      });
+    }
+    const token = await this.authService.generateToken({ userId: existUser.id, email: existUser.email });
+    return {
+      _metadata: {
+        message: 'login success',
+        statusCode: HttpStatus.OK,
+      },
+      _data: { token },
+    };
+  }
 }
