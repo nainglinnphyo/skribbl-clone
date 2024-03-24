@@ -25,6 +25,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     const request = ctx.getRequest<Request>();
     const traceId = request.headers['x-request-id'];
+    console.log(exception);
     const httpStatus = exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
     const responseBody = {
       _metadata: {

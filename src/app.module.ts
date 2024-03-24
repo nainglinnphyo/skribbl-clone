@@ -18,7 +18,6 @@ import { AppService } from './app.service';
 import { TimeoutInterceptor } from './core/interceptors/timeout.interceptor';
 import { RouterModule } from './modules/router.module';
 import { ValidationExceptionFilter } from './core/filters/validation.exception-filter';
-import { SocketGateway } from './modules/socket/socket.gateway';
 import { NestDrizzleModule } from './modules/drizzle/drizzle.module';
 
 @Module({
@@ -38,7 +37,6 @@ import { NestDrizzleModule } from './modules/drizzle/drizzle.module';
   ],
   controllers: [AppController],
   providers: [
-    SocketGateway,
     AppService,
     {
       provide: APP_FILTER,

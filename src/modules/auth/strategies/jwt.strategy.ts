@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable import/no-extraneous-dependencies */
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
@@ -25,6 +26,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         description: 'Invalid or Expire token',
       });
     }
-    return user;
+    return user._data.user;
   }
 }
