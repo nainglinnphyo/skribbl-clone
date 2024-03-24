@@ -11,16 +11,30 @@ import {
   UnauthorizedExceptionFilter,
 } from '@core/filters';
 import { RequestLoggerMiddleware } from '@core/middleware/logging.middleware';
+import * as schema from '@app/modules/drizzle/schema';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TimeoutInterceptor } from './core/interceptors/timeout.interceptor';
 import { RouterModule } from './modules/router.module';
 import { ValidationExceptionFilter } from './core/filters/validation.exception-filter';
-import { TypeOrmModule } from './modules/database/database.module';
 import { SocketGateway } from './modules/socket/socket.gateway';
+import { NestDrizzleModule } from './modules/drizzle/drizzle.module';
 
 @Module({
-  imports: [CommonModule, TypeOrmModule.forRoot(), RouterModule.forRoot()],
+  imports: [
+    CommonModule,
+    NestDrizzleModule.forRootAsync({
+      useFactory: () => {
+        return {
+          driver: 'postgres-js',
+          url: process.env.DATABASE_URL || '',
+          options: { schema },
+          migrationOptions: { migrationsFolder: './migration' },
+        };
+      },
+    }),
+    RouterModule.forRoot(),
+  ],
   controllers: [AppController],
   providers: [
     SocketGateway,

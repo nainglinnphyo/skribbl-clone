@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { BadRequestException } from '@app/core/exceptions';
 import { ExceptionConstants } from '@app/core/exceptions/constants';
@@ -19,25 +19,21 @@ export class AuthController {
   @Post('/user/register')
   @ApiBody({ type: RegisterDto })
   async userRegister(@Body() body: RegisterDto): Promise<IResponse> {
-    const userExist = await this.authService.checkUserExist(body.email);
-    if (userExist) {
+    const existUser = await this.authService.checkUserExist(body.email);
+    if (existUser) {
       throw new BadRequestException({
         message: 'user already exist',
         code: ExceptionConstants.BadRequestCodes.CONFLICT_EMAIL,
       });
     }
     const newUser = await this.authService.register(body);
-    const token = await this.authService.generateToken({ userId: newUser._id.toString(), email: newUser.email });
+    const token = await this.authService.generateToken({ userId: newUser.insertedId, email: newUser.email });
     return {
       _metadata: {
-        message: 'Register Success',
-        statusCode: 200,
+        message: 'register success',
+        statusCode: HttpStatus.OK,
       },
-      // 65fd3fa9d1d9b17bf2522232
-      // 65fd3fbbd1d9b17bf2522233
-      _data: {
-        accessToken: token,
-      },
+      _data: { token },
     };
   }
 
@@ -48,10 +44,10 @@ export class AuthController {
     return user;
   }
 
-  @Post('user/login')
-  @ApiBearerAuth()
-  @ApiBody({ type: LoginDto })
-  async login(@Body() dto: LoginDto) {
-    return this.authService.login(dto);
-  }
+  // @Post('user/login')
+  // @ApiBearerAuth()
+  // @ApiBody({ type: LoginDto })
+  // async login(@Body() dto: LoginDto) {
+  //   return this.authService.login(dto);
+  // }
 }
