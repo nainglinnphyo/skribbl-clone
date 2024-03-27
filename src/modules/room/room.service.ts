@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable radix */
 /* eslint-disable consistent-return */
 import { DRIZZLE_ORM } from '@app/core/constants/db.constants';
@@ -6,11 +7,23 @@ import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import * as schema from '@app/modules/drizzle/schema';
 import { and, eq, ne, sql } from 'drizzle-orm';
 import { takeUniqueOrNull } from '@app/shared/queries/query';
+import { generateSlug } from 'random-word-slugs';
 import { CreateRoomDto } from './room.dto';
 
 @Injectable()
 export class RoomService {
   constructor(@Inject(DRIZZLE_ORM) private conn: PostgresJsDatabase<typeof schema>) {}
+
+  async getRandomWord() {
+    const slug = generateSlug(4, {
+      format: 'title',
+      categories: {
+        adjective: ['color', 'appearance'],
+        // noun: ['animals','business','education','family','food','health','media','people','place','sports','technology','time'],
+      },
+    });
+    return slug.split(' ');
+  }
 
   async createRoom(userId: string, body: CreateRoomDto) {
     const [room] = await this.conn
