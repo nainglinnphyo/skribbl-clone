@@ -27,6 +27,7 @@ export const usersToRooms = pgTable(
     no: integer('no').default(0),
     point: integer('point').default(0),
     isInRoom: boolean('isInRoom').default(true),
+    currentRound: integer('currentRound').default(1),
   },
   // (table) => ({
   //   cpk: primaryKey({ name: 'composite_key', columns: [table.roomId, table.userId] }),

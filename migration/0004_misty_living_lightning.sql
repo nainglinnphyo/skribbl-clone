@@ -1,0 +1,1 @@
+ALTER TABLE "users_to_rooms" ADD COLUMN "currentRound" integer DEFAULT 1;
