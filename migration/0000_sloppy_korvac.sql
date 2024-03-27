@@ -20,14 +20,17 @@ CREATE TABLE IF NOT EXISTS "rooms" (
 	"draw_time_in_sec" integer DEFAULT 80,
 	"word_count" integer DEFAULT 3,
 	"hit" integer DEFAULT 2,
+	"start_at" timestamp,
 	"room_status" "room_enum",
 	"host_id" uuid NOT NULL,
 	CONSTRAINT "rooms_code_unique" UNIQUE("code")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "users_to_rooms" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"user_id" uuid NOT NULL,
 	"room_id" uuid NOT NULL,
+	"no" integer DEFAULT 0,
 	CONSTRAINT "composite_key" PRIMARY KEY("room_id","user_id")
 );
 --> statement-breakpoint

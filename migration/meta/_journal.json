@@ -5,29 +5,15 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1711301303760,
-      "tag": "0000_wealthy_raider",
+      "when": 1711522124897,
+      "tag": "0000_sloppy_korvac",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "5",
-      "when": 1711456611608,
-      "tag": "0001_classy_medusa",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1711456719395,
-      "tag": "0002_robust_warhawk",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1711515986095,
-      "tag": "0003_red_fat_cobra",
+      "when": 1711522146659,
+      "tag": "0001_dazzling_the_executioner",
       "breakpoints": true
     }
   ]

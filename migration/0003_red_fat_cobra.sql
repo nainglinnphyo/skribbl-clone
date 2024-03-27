@@ -1,1 +1,0 @@
-ALTER TABLE "users_to_rooms" ADD COLUMN "hit" integer DEFAULT 0;

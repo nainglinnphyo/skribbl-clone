@@ -1,5 +1,5 @@
 {
-  "id": "255d5e48-4bf6-4ac3-acb1-2cda73e0f656",
+  "id": "77b84a21-443e-4121-801f-e7357e72b72b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -99,6 +99,12 @@
           "notNull": false,
           "default": 2
         },
+        "start_at": {
+          "name": "start_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
         "room_status": {
           "name": "room_status",
           "type": "room_enum",
@@ -143,6 +149,13 @@
       "name": "users_to_rooms",
       "schema": "",
       "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
         "user_id": {
           "name": "user_id",
           "type": "uuid",
@@ -154,6 +167,13 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
+        },
+        "no": {
+          "name": "no",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
         }
       },
       "indexes": {},

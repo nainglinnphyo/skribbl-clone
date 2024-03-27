@@ -1,11 +1,14 @@
+import { usersToRooms } from './../drizzle/schema/relation';
+import { roomEnum } from './../drizzle/schema/enum';
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { IResponse } from '@app/core/interfaces/response.interface';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import * as schema from '@app/modules/drizzle/schema';
 import { DRIZZLE_ORM } from '@app/core/constants/db.constants';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, ne, sql } from 'drizzle-orm';
 import { takeUniqueOrNull } from '@app/shared/queries/query';
+import postgres from 'postgres';
 
 @Injectable()
 export class AuthService {
@@ -54,6 +57,16 @@ export class AuthService {
     return this.conn.query.users.findFirst({
       where: and(eq(schema.users.email, dto.email), eq(schema.users.password, dto.password)),
     });
+  }
+
+  async checkUserRoomExist(userId: string) {
+    const statement = sql`SELECT ${schema.rooms}.*
+    FROM  ${schema.rooms}
+    JOIN  ${schema.usersToRooms} ON ${schema.rooms.id} =${schema.usersToRooms.roomId}
+    WHERE ${schema.usersToRooms.userId} = ${userId} AND ${schema.rooms.roomStatus} != 'finish';
+    `;
+    const res: postgres.RowList<Record<string, unknown>[]> = await this.conn.execute(statement)[0];
+    return res;
   }
 
   generateToken(payload: { userId: string; email: string }) {

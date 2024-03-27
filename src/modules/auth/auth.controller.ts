@@ -41,12 +41,13 @@ export class AuthController {
   async validateUser(@Query() query: { deviceId: string; name?: string }) {
     const newUser = await this.authService.createUser(query.deviceId, query.name);
     const token = await this.authService.generateToken({ userId: newUser.insertedId, email: newUser.email });
+    const checkRoom = await this.authService.checkUserRoomExist(newUser.insertedId);
     return {
       _metadata: {
         message: 'register success',
         statusCode: HttpStatus.OK,
       },
-      _data: { token, user: newUser },
+      _data: { token, user: newUser, currentRoom: checkRoom || null },
     };
   }
 

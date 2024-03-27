@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { relations } from 'drizzle-orm';
-import { integer, pgTable, primaryKey, uuid } from 'drizzle-orm/pg-core';
+import { integer, pgTable, uuid } from 'drizzle-orm/pg-core';
 import { users } from './user';
 import { rooms } from './room';
 
@@ -17,17 +17,18 @@ export const userRelations = relations(users, ({ many }) => ({
 export const usersToRooms = pgTable(
   'users_to_rooms',
   {
+    id: uuid('id').defaultRandom().primaryKey().notNull(),
     userId: uuid('user_id')
       .notNull()
       .references(() => users.id),
     roomId: uuid('room_id')
       .notNull()
       .references(() => rooms.id),
-    no: integer('hit').default(0),
+    no: integer('no').default(0),
   },
-  (table) => ({
-    cpk: primaryKey({ name: 'composite_key', columns: [table.roomId, table.userId] }),
-  }),
+  // (table) => ({
+  //   cpk: primaryKey({ name: 'composite_key', columns: [table.roomId, table.userId] }),
+  // }),
 );
 
 export const usersToRoomsRelations = relations(usersToRooms, ({ one }) => ({
