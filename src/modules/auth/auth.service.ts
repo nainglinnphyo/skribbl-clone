@@ -6,7 +6,6 @@ import * as schema from '@app/modules/drizzle/schema';
 import { DRIZZLE_ORM } from '@app/core/constants/db.constants';
 import { and, eq, sql } from 'drizzle-orm';
 import { takeUniqueOrNull } from '@app/shared/queries/query';
-import postgres from 'postgres';
 
 @Injectable()
 export class AuthService {

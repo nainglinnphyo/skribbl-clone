@@ -1,0 +1,1 @@
+ALTER TABLE "users_to_rooms" ADD COLUMN "point" integer DEFAULT 0;

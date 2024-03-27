@@ -25,6 +25,7 @@ export const usersToRooms = pgTable(
       .notNull()
       .references(() => rooms.id),
     no: integer('no').default(0),
+    point: integer('point').default(0),
   },
   // (table) => ({
   //   cpk: primaryKey({ name: 'composite_key', columns: [table.roomId, table.userId] }),

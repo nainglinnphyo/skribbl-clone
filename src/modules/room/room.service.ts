@@ -78,6 +78,7 @@ export class RoomService {
         return {
           id: u.user.id,
           name: u.user.name,
+          point: u.point,
         };
       }),
     };
