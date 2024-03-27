@@ -26,12 +26,13 @@ export class AuthService {
   }
 
   async createUser(deviceId: string, name?: string) {
+    const resUser = await this.conn.select().from(schema.users).where(eq(schema.users.email, deviceId)).then(takeUniqueOrNull);
     const [user] = await this.conn
       .insert(schema.users)
-      .values({ email: deviceId, name: name || '', password: deviceId })
+      .values({ email: deviceId, name: name === null ? resUser.name : name, password: deviceId })
       .onConflictDoUpdate({
         target: schema.users.email,
-        set: { email: deviceId, name: name || '', password: deviceId },
+        set: { email: deviceId, name: name === null ? resUser.name : name, password: deviceId },
       })
       .returning({ insertedId: schema.users.id, email: schema.users.email, name: schema.users.name });
     return user;
