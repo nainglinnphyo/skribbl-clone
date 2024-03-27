@@ -17,9 +17,9 @@ export class RoomController {
 
   @Get('user/:roomCode')
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   async getRoomUser(@Param('roomCode') roomCode: string): Promise<IResponse> {
-    const users = this.roomService.getRoomUserList(roomCode);
+    const users = await this.roomService.getRoomUserList(roomCode);
     return {
       _metadata: {
         message: 'fetch success',
