@@ -4,6 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import * as schema from '@app/modules/drizzle/schema';
 import { and, eq } from 'drizzle-orm';
+import { takeUniqueOrNull } from '@app/shared/queries/query';
 
 @Injectable()
 export class RoomService {
@@ -19,6 +20,10 @@ export class RoomService {
       })
       .returning();
     return room;
+  }
+
+  async getRoomUser(userId: string) {
+    return this.conn.select().from(schema.users).where(eq(schema.users.id, userId)).then(takeUniqueOrNull);
   }
 
   async joinRoom(roomCode: string, userId: string) {

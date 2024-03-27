@@ -46,9 +46,11 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('joinRoom')
-  joinRoom(@MessageBody() payload: { roomCode: string; userId: string }, @ConnectedSocket() client?: Socket) {
+  async joinRoom(@MessageBody() payload: { roomCode: string; userId: string }, @ConnectedSocket() client?: Socket) {
     client.join(payload.roomCode);
     this.roomService.joinRoom(payload.roomCode, payload.userId);
+    const user = await this.roomService.getRoomUser(payload.userId);
+    this.sendRoom({ roomCode: payload.roomCode, event: 'user-join-room', data: { name: user.name } }, client);
     return 'join success';
   }
 
