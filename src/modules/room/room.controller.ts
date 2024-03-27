@@ -30,8 +30,8 @@ export class RoomController {
   }
 
   @Get('random-word')
-  async getRandomWord(){
-    return this.roomService.getRandomWord()
+  async getRandomWord() {
+    return this.roomService.getRandomWord();
   }
 
   @Post('create')

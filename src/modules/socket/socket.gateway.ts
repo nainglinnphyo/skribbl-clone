@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 /* eslint-disable import/no-cycle */
 /* eslint-disable import/no-extraneous-dependencies */
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -27,6 +28,8 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private logger: Logger = new Logger(SocketGateway.name);
 
   private userMap = new Map();
+
+  private roomMap: Map<string, { chosenWord: string; guessedPlayer: { name: string; points: number }[] }> = new Map();
 
   constructor(private roomService: RoomService) {}
 
@@ -76,9 +79,16 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     let message = '';
     let guessed = false;
     let drawingData = '';
+    const roomData = this.roomMap.get(payload.roomCode);
+
     switch (payload.event) {
       case 'room-msg':
-        guessed = payload.data.message === 'red';
+        guessed = payload.data.message === roomData.chosenWord;
+        const existingPlayerIndex = roomData.guessedPlayer.findIndex((player) => player.name === payload.data.userName);
+        if (existingPlayerIndex === -1) {
+          roomData.guessedPlayer.push({ name: payload.data.userName, points: 100 });
+          this.roomMap.set(payload.roomCode, roomData);
+        }
         message = payload.data.message === 'red' ? 'You guessed word!' : payload.data.message;
         this.server.to(payload.roomCode).emit(payload.event, {
           user: {
@@ -92,6 +102,12 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
         drawingData = payload.data;
         this.server.to(payload.roomCode).emit(payload.event, { drawingData });
         break;
+      case 'start-room':
+        this.roomMap.set(payload.roomCode, { chosenWord: 'red', guessedPlayer: [] });
+        break;
+      case 'get-room-data':
+        return this.roomMap.get(payload.roomCode);
+      // break;
       default:
         this.server.to(payload.roomCode).emit(payload.event, { ...payload.data });
         break;
