@@ -5,18 +5,20 @@ import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import * as schema from '@app/modules/drizzle/schema';
 import { and, eq, count } from 'drizzle-orm';
 import { takeUniqueOrNull } from '@app/shared/queries/query';
+import { CreateRoomDto } from './room.dto';
 
 @Injectable()
 export class RoomService {
   constructor(@Inject(DRIZZLE_ORM) private conn: PostgresJsDatabase<typeof schema>) {}
 
-  async createRoom(userId: string) {
+  async createRoom(userId: string, body: CreateRoomDto) {
     const [room] = await this.conn
       .insert(schema.rooms)
       .values({
         host_id: userId,
         code: this.generateID(6),
         roomStatus: 'queue',
+        ...body,
       })
       .returning();
     return room;
