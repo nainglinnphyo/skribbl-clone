@@ -1,5 +1,5 @@
 import { CurrentUser, IAuthUser } from '@app/core/decorators/auth.decorators';
-import { Body, Controller, HttpStatus, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { IResponse } from '@app/core/interfaces/response.interface';
 import { RoomService } from './room.service';
@@ -14,6 +14,20 @@ import { CreateRoomDto } from './room.dto';
 @ApiTags('Room')
 export class RoomController {
   constructor(private roomService: RoomService) {}
+
+  @Get('user/:roomCode')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  async getRoomUser(@Param('roomCode') roomCode: string): Promise<IResponse> {
+    const users = this.roomService.getRoomUserList(roomCode);
+    return {
+      _metadata: {
+        message: 'fetch success',
+        statusCode: HttpStatus.OK,
+      },
+      _data: users,
+    };
+  }
 
   @Post('create')
   @ApiBearerAuth()

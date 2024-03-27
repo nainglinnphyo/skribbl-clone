@@ -61,4 +61,26 @@ export class RoomService {
     }
     return result;
   }
+
+  async getRoomUserList(roomCode: string) {
+    const users = await this.conn.query.rooms.findFirst({
+      where: eq(schema.rooms.code, roomCode),
+      with: {
+        usersToRooms: {
+          with: { user: true },
+        },
+      },
+    });
+    const res: any = {
+      users: users.usersToRooms.map((u) => {
+        return {
+          id: u.user.id,
+          name: u.user.name,
+        };
+      }),
+    };
+    delete users.usersToRooms;
+    res.roomData = users;
+    return res;
+  }
 }
