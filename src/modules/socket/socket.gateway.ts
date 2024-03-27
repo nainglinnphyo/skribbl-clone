@@ -35,7 +35,13 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.logger.log('Socket Initialized');
   }
 
-  handleDisconnect(client: Socket) {
+  async handleDisconnect(client: Socket) {
+    const user = await this.roomService.getRoomUser(client.handshake.query.userId as string);
+    const existRoom = await this.roomService.checkUserRoomExist(client.handshake.query.userId as string);
+    if (existRoom) {
+      this.sendRoom({ roomCode: existRoom.code as string, data: { msg: `${user.name} have leave room` }, event: 'user-leave-room' });
+      client.leave(existRoom.code as string);
+    }
     this.userMap.delete(client.handshake.query.userId);
     this.logger.log('client disconnected ', client.id);
   }
@@ -50,7 +56,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     client.join(payload.roomCode);
     this.roomService.joinRoom(payload.roomCode, payload.userId);
     const user = await this.roomService.getRoomUser(payload.userId);
-    this.sendRoom({ roomCode: payload.roomCode, event: 'user-join-room', data: { name: user.name } }, client);
+    this.sendRoom({ roomCode: payload.roomCode, event: 'user-join-room', data: { msg: `${user.name} have join room` } }, client);
     return 'join success';
   }
 

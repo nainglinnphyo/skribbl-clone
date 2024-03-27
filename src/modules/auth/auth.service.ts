@@ -63,8 +63,9 @@ export class AuthService {
     JOIN  ${schema.usersToRooms} ON ${schema.rooms.id} =${schema.usersToRooms.roomId}
     WHERE ${schema.usersToRooms.userId} = ${userId} AND ${schema.rooms.roomStatus} != 'finish';
     `;
-    const res: postgres.RowList<Record<string, unknown>[]> = await this.conn.execute(statement)[0];
-    return res;
+
+    const res = await this.conn.execute(statement);
+    return res[0];
   }
 
   generateToken(payload: { userId: string; email: string }) {

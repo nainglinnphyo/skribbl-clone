@@ -3,10 +3,10 @@ import { DRIZZLE_ORM } from '@app/core/constants/db.constants';
 import { Inject, Injectable } from '@nestjs/common';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import * as schema from '@app/modules/drizzle/schema';
-import { and, eq, count, sql } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import { takeUniqueOrNull } from '@app/shared/queries/query';
-import { CreateRoomDto } from './room.dto';
 import postgres from 'postgres';
+import { CreateRoomDto } from './room.dto';
 
 @Injectable()
 export class RoomService {
@@ -84,5 +84,16 @@ export class RoomService {
     delete users.usersToRooms;
     res.roomData = users;
     return res;
+  }
+
+  async checkUserRoomExist(userId: string) {
+    const statement = sql`SELECT ${schema.rooms}.*
+    FROM  ${schema.rooms}
+    JOIN  ${schema.usersToRooms} ON ${schema.rooms.id} =${schema.usersToRooms.roomId}
+    WHERE ${schema.usersToRooms.userId} = ${userId} AND ${schema.rooms.roomStatus} != 'finish';
+    `;
+
+    const res = await this.conn.execute(statement);
+    return res[0];
   }
 }
