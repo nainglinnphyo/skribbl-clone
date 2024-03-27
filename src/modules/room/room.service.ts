@@ -1,3 +1,4 @@
+/* eslint-disable radix */
 /* eslint-disable consistent-return */
 import { DRIZZLE_ORM } from '@app/core/constants/db.constants';
 import { Inject, Injectable } from '@nestjs/common';
@@ -38,8 +39,7 @@ export class RoomService {
     const statement = sql`SELECT COUNT(*)
     FROM ${schema.usersToRooms} WHERE ${schema.usersToRooms.roomId} = ${room.id};
     `;
-    const constRes: postgres.RowList<Record<string, unknown>[]> = await this.conn.execute(statement)[0];
-
+    const constRes = await this.conn.execute(statement);
     if (checkUserToRoom) {
       return;
     }
@@ -48,7 +48,7 @@ export class RoomService {
       .values({
         userId,
         roomId: room.id,
-        no: constRes.count + 1,
+        no: (parseInt(constRes[0]?.count.toString()) || 0) + 1,
       })
       .returning();
     return rel;

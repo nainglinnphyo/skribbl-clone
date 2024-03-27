@@ -39,7 +39,10 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const user = await this.roomService.getRoomUser(client.handshake.query.userId as string);
     const existRoom = await this.roomService.checkUserRoomExist(client.handshake.query.userId as string);
     if (existRoom) {
-      this.sendRoom({ roomCode: existRoom.code as string, data: { msg: `${user.name} have leave room` }, event: 'user-leave-room' });
+      this.sendRoom(
+        { roomCode: existRoom.code as string, data: { msg: `${user.name} have leave room` }, event: 'user-leave-room' },
+        client,
+      );
       client.leave(existRoom.code as string);
     }
     this.userMap.delete(client.handshake.query.userId);
@@ -62,7 +65,15 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('sendRoom')
   sendRoom(@MessageBody() payload: { roomCode: string; event: string; data: any }, @ConnectedSocket() client?: Socket) {
-    this.logger.verbose(`emit user ${client.id}`);
+    this.logger.verbose(`emit user ${client?.id}`);
+    switch (payload.event) {
+      case 'start-room':
+        console.log('start-room');
+        break;
+
+      default:
+        break;
+    }
     this.server.to(payload.roomCode).emit(payload.event, { data: payload.data });
   }
 }
