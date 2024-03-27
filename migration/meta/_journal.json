@@ -36,6 +36,20 @@
       "when": 1711530858846,
       "tag": "0004_misty_living_lightning",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1711531377016,
+      "tag": "0005_dazzling_iron_monger",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1711531401619,
+      "tag": "0006_strange_vampiro",
+      "breakpoints": true
     }
   ]
 }

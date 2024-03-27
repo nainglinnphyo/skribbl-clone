@@ -1,7 +1,7 @@
 /* eslint-disable import/no-cycle */
 /* eslint-disable import/no-extraneous-dependencies */
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -21,6 +21,7 @@ import { RoomService } from '../room/room.service';
   },
   namespace: 'socket',
 })
+@Injectable()
 export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private logger: Logger = new Logger(SocketGateway.name);
 

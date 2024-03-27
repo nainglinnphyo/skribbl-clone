@@ -12,6 +12,7 @@ export const rooms = pgTable('rooms', {
   hit: integer('hit').default(2),
   startAt: timestamp('start_at'),
   roomStatus: roomEnum('room_status'),
+  currentRound: integer('currentRound').default(0),
   host_id: uuid('host_id')
     .notNull()
     .references(() => users.id),
