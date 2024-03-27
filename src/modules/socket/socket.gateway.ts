@@ -86,6 +86,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.server.to(payload.roomCode).emit(payload.event, { drawingData });
         break;
       default:
+        this.server.to(payload.roomCode).emit(payload.event, { ...payload.data });
         break;
     }
 
