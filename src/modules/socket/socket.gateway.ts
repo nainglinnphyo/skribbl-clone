@@ -69,10 +69,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('sendRoom')
   sendRoom(@MessageBody() payload: { roomCode: string; event: string; data: any }, @ConnectedSocket() client?: Socket) {
     console.log(client.id);
-    console.log(payload.event);
-    setTimeout(() => {
-      this.server.to(payload.roomCode).emit('change-round', { ...payload.data });
-    }, 4000);
+    console.log(payload);
     switch (payload.event) {
       case 'start-room':
         console.log('start-room');
