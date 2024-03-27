@@ -38,7 +38,9 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   async handleDisconnect(client: Socket) {
     const user = await this.roomService.getRoomUser(client.handshake.query.userId as string);
-    const existRoom = await this.roomService.checkUserRoomExist(client.handshake.query.userId as string);
+    const existRoom:any
+     = await this.roomService.checkUserRoomExist(client.handshake.query.userId as string);
+    console.log(existRoom.code);
     if (existRoom) {
       this.roomService.userLeaveRoom(user.id, existRoom.id as string);
       this.sendRoom(
