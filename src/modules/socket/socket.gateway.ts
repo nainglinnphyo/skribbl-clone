@@ -80,13 +80,18 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       case 'room-msg':
         guessed = payload.data.message === 'red';
         message = payload.data.message === 'red' ? 'You guessed word!' : payload.data.message;
-        this.server.to(payload.roomCode).emit(payload.event, { user: payload.data.user, msg: message, guessed });
+        this.server.to(payload.roomCode).emit(payload.event, {
+          user: {
+            userName: payload.data.userName,
+          },
+          msg: message,
+          guessed,
+        });
         break;
       case 'drawing-data':
         drawingData = payload.data;
         this.server.to(payload.roomCode).emit(payload.event, { drawingData });
         break;
-
       default:
         this.server.to(payload.roomCode).emit(payload.event, { ...payload.data });
         break;
