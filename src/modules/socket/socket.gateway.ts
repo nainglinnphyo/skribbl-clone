@@ -15,7 +15,7 @@ import { Server, Socket } from 'socket.io';
 import { RoomService } from '../room/room.service';
 
 @WebSocketGateway({
-  transport: ['websocket'],
+  transports: ['websocket', 'polling'],
   cors: {
     origin: '*',
   },
