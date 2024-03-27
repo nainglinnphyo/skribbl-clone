@@ -75,7 +75,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('sendRoom')
   sendRoom(@MessageBody() payload: { roomCode: string; event: string; data: any }, @ConnectedSocket() client?: Socket) {
-    console.log(client.id, payload.data);
+    console.log(client.id, payload);
     let message = '';
     let guessed = false;
     let drawingData = '';
