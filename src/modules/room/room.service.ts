@@ -40,7 +40,7 @@ export class RoomService {
     `;
     const constRes = await this.conn.execute(statement);
     if (checkUserToRoom) {
-      this.conn
+      await this.conn
         .update(schema.usersToRooms)
         .set({ isInRoom: true })
         .where(and(eq(schema.usersToRooms.roomId, room.id), eq(schema.usersToRooms.userId, userId)));
@@ -94,8 +94,8 @@ export class RoomService {
   async checkUserRoomExist(userId: string) {
     const statement = sql`SELECT ${schema.rooms}.*
     FROM  ${schema.rooms}
-    JOIN  ${schema.usersToRooms} ON ${schema.rooms.id} =${schema.usersToRooms.roomId}
-    WHERE ${schema.usersToRooms.userId} = ${userId} AND ${schema.rooms.roomStatus} != 'finish' ORDER BY create_at DESC;
+    JOIN  ${schema.usersToRooms} ON ${schema.rooms.id} = ${schema.usersToRooms.roomId}
+    WHERE ${schema.usersToRooms.userId} = ${userId} AND ${schema.usersToRooms.isInRoom} = TRUE AND ${schema.rooms.roomStatus} != 'finish' ORDER BY create_at DESC;
     `;
 
     const res = await this.conn.execute(statement);
