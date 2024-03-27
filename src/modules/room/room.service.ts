@@ -6,7 +6,6 @@ import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import * as schema from '@app/modules/drizzle/schema';
 import { and, eq, sql } from 'drizzle-orm';
 import { takeUniqueOrNull } from '@app/shared/queries/query';
-import postgres from 'postgres';
 import { CreateRoomDto } from './room.dto';
 
 @Injectable()
@@ -41,6 +40,10 @@ export class RoomService {
     `;
     const constRes = await this.conn.execute(statement);
     if (checkUserToRoom) {
+      this.conn
+        .update(schema.usersToRooms)
+        .set({ isInRoom: true })
+        .where(and(eq(schema.usersToRooms.roomId, room.id), eq(schema.usersToRooms.userId, userId)));
       return;
     }
     const [rel] = await this.conn
@@ -69,6 +72,7 @@ export class RoomService {
       where: eq(schema.rooms.code, roomCode),
       with: {
         usersToRooms: {
+          where: eq(schema.usersToRooms.isInRoom, true),
           with: { user: true },
         },
       },
@@ -96,5 +100,13 @@ export class RoomService {
 
     const res = await this.conn.execute(statement);
     return res[0];
+  }
+
+  async userLeaveRoom(userId: string, roomId: string) {
+    const update = await this.conn
+      .update(schema.usersToRooms)
+      .set({ isInRoom: false })
+      .where(and(eq(schema.usersToRooms.roomId, roomId), eq(schema.usersToRooms.userId, userId)));
+    return update;
   }
 }
