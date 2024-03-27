@@ -73,16 +73,21 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('sendRoom')
   sendRoom(@MessageBody() payload: { roomCode: string; event: string; data: any }, @ConnectedSocket() client?: Socket) {
     console.log(client.id);
-    console.log(payload);
+    let message = '';
+    let drawingData = '';
     switch (payload.event) {
-      case 'start-room':
-        console.log('start-room');
+      case 'room-msg':
+        message = payload.data.message;
+        this.server.to(payload.roomCode).emit(payload.event, { msg: `${payload.data.userName} : ${message}` });
         break;
-
+      case 'drawing-data':
+        drawingData = payload.data;
+        this.server.to(payload.roomCode).emit(payload.event, { drawingData });
+        break;
       default:
         break;
     }
-    this.server.to(payload.roomCode).emit(payload.event, { ...payload.data });
+
     return 'send room success';
   }
 }
