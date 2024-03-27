@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { relations } from 'drizzle-orm';
-import { pgTable, primaryKey, uuid } from 'drizzle-orm/pg-core';
+import { integer, pgTable, primaryKey, uuid } from 'drizzle-orm/pg-core';
 import { users } from './user';
 import { rooms } from './room';
 
@@ -23,6 +23,7 @@ export const usersToRooms = pgTable(
     roomId: uuid('room_id')
       .notNull()
       .references(() => rooms.id),
+    no: integer('hit').default(0),
   },
   (table) => ({
     cpk: primaryKey({ name: 'composite_key', columns: [table.roomId, table.userId] }),

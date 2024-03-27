@@ -3,7 +3,7 @@ import { DRIZZLE_ORM } from '@app/core/constants/db.constants';
 import { Inject, Injectable } from '@nestjs/common';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import * as schema from '@app/modules/drizzle/schema';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, count } from 'drizzle-orm';
 import { takeUniqueOrNull } from '@app/shared/queries/query';
 
 @Injectable()
@@ -28,9 +28,14 @@ export class RoomService {
 
   async joinRoom(roomCode: string, userId: string) {
     const room = await this.conn.query.rooms.findFirst({ where: eq(schema.rooms.code, roomCode) });
+
     const checkUserToRoom = await this.conn.query.usersToRooms.findFirst({
       where: and(eq(schema.usersToRooms.userId, userId), eq(schema.usersToRooms.roomId, room.id)),
     });
+    const roomUserCount = await this.conn
+      .select({ value: count() })
+      .from(schema.usersToRooms)
+      .where(and(eq(schema.usersToRooms.userId, userId), eq(schema.usersToRooms.roomId, room.id)))[0];
     if (checkUserToRoom) {
       return;
     }
@@ -39,6 +44,7 @@ export class RoomService {
       .values({
         userId,
         roomId: room.id,
+        no: roomUserCount + 1,
       })
       .returning();
     return rel;
