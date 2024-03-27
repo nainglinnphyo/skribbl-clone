@@ -80,14 +80,16 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     let guessed = false;
     let drawingData = '';
     const roomData = this.roomMap.get(payload.roomCode);
-
+    console.log({ roomData });
     switch (payload.event) {
       case 'room-msg':
-        guessed = payload.data.message === roomData.chosenWord;
-        const existingPlayerIndex = roomData.guessedPlayer.findIndex((player) => player.name === payload.data.userName);
-        if (existingPlayerIndex === -1) {
-          roomData.guessedPlayer.push({ name: payload.data.userName, points: 100 });
-          this.roomMap.set(payload.roomCode, roomData);
+        if (roomData) {
+          guessed = payload.data.message === roomData.chosenWord;
+          const existingPlayerIndex = roomData.guessedPlayer.findIndex((player) => player.name === payload.data.userName);
+          if (existingPlayerIndex === -1) {
+            roomData.guessedPlayer.push({ name: payload.data.userName, points: 100 });
+            this.roomMap.set(payload.roomCode, roomData);
+          }
         }
         message = payload.data.message === 'red' ? 'You guessed word!' : payload.data.message;
         this.server.to(payload.roomCode).emit(payload.event, {
