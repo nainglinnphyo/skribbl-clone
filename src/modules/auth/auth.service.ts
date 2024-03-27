@@ -33,7 +33,7 @@ export class AuthService {
         target: schema.users.email,
         set: { email: deviceId, name: name || '', password: deviceId },
       })
-      .returning({ insertedId: schema.users.id, email: schema.users.email });
+      .returning({ insertedId: schema.users.id, email: schema.users.email, name: schema.users.name });
     return user;
   }
 
