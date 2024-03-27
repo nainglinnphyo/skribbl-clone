@@ -95,7 +95,7 @@ export class RoomService {
     const statement = sql`SELECT ${schema.rooms}.*
     FROM  ${schema.rooms}
     JOIN  ${schema.usersToRooms} ON ${schema.rooms.id} =${schema.usersToRooms.roomId}
-    WHERE ${schema.usersToRooms.userId} = ${userId} AND ${schema.rooms.roomStatus} != 'finish' ORDER BY created_at DESC;
+    WHERE ${schema.usersToRooms.userId} = ${userId} AND ${schema.rooms.roomStatus} != 'finish' ORDER BY create_at DESC;
     `;
 
     const res = await this.conn.execute(statement);
