@@ -1,4 +1,5 @@
 import { integer, pgTable, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
 import { roomEnum } from './enum';
 import { users } from './user';
 
@@ -16,4 +17,6 @@ export const rooms = pgTable('rooms', {
   host_id: uuid('host_id')
     .notNull()
     .references(() => users.id),
+  createAt: timestamp('create_at').default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: timestamp('updated_at').default(sql`CURRENT_TIMESTAMP`),
 });

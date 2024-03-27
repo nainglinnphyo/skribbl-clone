@@ -50,6 +50,13 @@
       "when": 1711531401619,
       "tag": "0006_strange_vampiro",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1711532612231,
+      "tag": "0007_legal_paper_doll",
+      "breakpoints": true
     }
   ]
 }

@@ -10,6 +10,7 @@ import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
+  WsException,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { RoomService } from '../room/room.service';
@@ -39,7 +40,6 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async handleDisconnect(client: Socket) {
     const user = await this.roomService.getRoomUser(client.handshake.query.userId as string);
     const existRoom: any = await this.roomService.checkUserRoomExist(client.handshake.query.userId as string);
-    console.log(existRoom.code);
     if (existRoom) {
       this.roomService.userLeaveRoom(user.id, existRoom.id as string);
       this.sendRoom(
@@ -59,6 +59,10 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('joinRoom')
   async joinRoom(@MessageBody() payload: { roomCode: string; userId: string }, @ConnectedSocket() client?: Socket) {
+    const checkRoom = await this.roomService.checkRoom(payload.roomCode);
+    if (!checkRoom) {
+      throw new WsException('room not exist');
+    }
     client.join(payload.roomCode);
     this.roomService.joinRoom(payload.roomCode, payload.userId);
     const user = await this.roomService.getRoomUser(payload.userId);
