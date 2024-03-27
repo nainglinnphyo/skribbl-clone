@@ -3,9 +3,10 @@ import { DRIZZLE_ORM } from '@app/core/constants/db.constants';
 import { Inject, Injectable } from '@nestjs/common';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import * as schema from '@app/modules/drizzle/schema';
-import { and, eq, count } from 'drizzle-orm';
+import { and, eq, count, sql } from 'drizzle-orm';
 import { takeUniqueOrNull } from '@app/shared/queries/query';
 import { CreateRoomDto } from './room.dto';
+import postgres from 'postgres';
 
 @Injectable()
 export class RoomService {
@@ -34,10 +35,11 @@ export class RoomService {
     const checkUserToRoom = await this.conn.query.usersToRooms.findFirst({
       where: and(eq(schema.usersToRooms.userId, userId), eq(schema.usersToRooms.roomId, room.id)),
     });
-    const roomUserCount = await this.conn
-      .select({ value: count() })
-      .from(schema.usersToRooms)
-      .where(and(eq(schema.usersToRooms.userId, userId), eq(schema.usersToRooms.roomId, room.id)))[0];
+    const statement = sql`SELECT COUNT(*)
+    FROM ${schema.usersToRooms} WHERE ${schema.usersToRooms.roomId} = ${room.id};
+    `;
+    const constRes: postgres.RowList<Record<string, unknown>[]> = await this.conn.execute(statement)[0];
+
     if (checkUserToRoom) {
       return;
     }
@@ -46,7 +48,7 @@ export class RoomService {
       .values({
         userId,
         roomId: room.id,
-        no: roomUserCount + 1,
+        no: constRes.count + 1,
       })
       .returning();
     return rel;
