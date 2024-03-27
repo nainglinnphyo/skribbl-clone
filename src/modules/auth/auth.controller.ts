@@ -46,7 +46,7 @@ export class AuthController {
         message: 'register success',
         statusCode: HttpStatus.OK,
       },
-      _data: { token },
+      _data: { token, user: newUser },
     };
   }
 
