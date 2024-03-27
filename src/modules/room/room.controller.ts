@@ -18,7 +18,6 @@ export class RoomController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   async createRoom(@CurrentUser() user: IAuthUser): Promise<IResponse> {
-    console.log(user);
     const newRoom = await this.roomService.createRoom(user.id);
     return {
       _data: newRoom,

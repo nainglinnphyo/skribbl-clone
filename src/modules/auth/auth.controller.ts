@@ -1,12 +1,10 @@
-import { Body, Controller, Get, HttpStatus, Post, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, HttpStatus, Post, Query } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { BadRequestException } from '@app/core/exceptions';
 import { ExceptionConstants } from '@app/core/exceptions/constants';
 import { IResponse } from '@app/core/interfaces/response.interface';
-import { CurrentUser, IAuthUser } from '@app/core/decorators/auth.decorators';
 import { AuthService } from './auth.service';
-import { LoginDto, RegisterDto } from './dto/auth.dto';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { LoginDto, MeDto, RegisterDto } from './dto/auth.dto';
 
 @ApiTags('Auth')
 @Controller({
@@ -38,9 +36,18 @@ export class AuthController {
 
   @Get('user/me')
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
-  async validateUser(@CurrentUser() user: IAuthUser) {
-    return this.authService.validateUser(user.id);
+  // @UseGuards(JwtAuthGuard)
+  @ApiQuery({ type: MeDto })
+  async validateUser(@Query() query: { deviceId: string; name?: string }) {
+    const newUser = await this.authService.createUser(query.deviceId, query.name);
+    const token = await this.authService.generateToken({ userId: newUser.insertedId, email: newUser.email });
+    return {
+      _metadata: {
+        message: 'register success',
+        statusCode: HttpStatus.OK,
+      },
+      _data: { token },
+    };
   }
 
   @Post('user/login')

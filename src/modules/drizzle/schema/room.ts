@@ -1,4 +1,4 @@
-import { integer, pgTable, uuid, varchar } from 'drizzle-orm/pg-core';
+import { integer, pgTable, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
 import { roomEnum } from './enum';
 import { users } from './user';
 
@@ -10,6 +10,7 @@ export const rooms = pgTable('rooms', {
   drawTimeInSec: integer('draw_time_in_sec').default(80),
   wordCount: integer('word_count').default(3),
   hit: integer('hit').default(2),
+  startAt: timestamp('start_at'),
   roomStatus: roomEnum('room_status'),
   host_id: uuid('host_id')
     .notNull()

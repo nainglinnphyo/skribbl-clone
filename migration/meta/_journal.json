@@ -8,6 +8,20 @@
       "when": 1711301303760,
       "tag": "0000_wealthy_raider",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1711456611608,
+      "tag": "0001_classy_medusa",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1711456719395,
+      "tag": "0002_robust_warhawk",
+      "breakpoints": true
     }
   ]
 }

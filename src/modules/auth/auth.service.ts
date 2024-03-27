@@ -25,6 +25,18 @@ export class AuthService {
     };
   }
 
+  async createUser(deviceId: string, name?: string) {
+    const [user] = await this.conn
+      .insert(schema.users)
+      .values({ email: deviceId, name: name || '', password: deviceId })
+      .onConflictDoUpdate({
+        target: schema.users.email,
+        set: { email: deviceId, name: name || '', password: deviceId },
+      })
+      .returning({ insertedId: schema.users.id, email: schema.users.email });
+    return user;
+  }
+
   async checkUserExist(email: string) {
     return this.conn.select().from(schema.users).where(eq(schema.users.email, email)).then(takeUniqueOrNull);
   }

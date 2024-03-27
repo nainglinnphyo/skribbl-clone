@@ -1,6 +1,14 @@
 /* eslint-disable max-classes-per-file */
 import { ApiProperty } from '@nestjs/swagger';
 
+export class MeDto {
+  @ApiProperty()
+  deviceId: string;
+
+  @ApiProperty({ required: false })
+  name?: string;
+}
+
 export class RegisterDto {
   @ApiProperty()
   name: string;
